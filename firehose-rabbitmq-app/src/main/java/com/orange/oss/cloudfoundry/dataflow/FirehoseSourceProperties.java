@@ -2,8 +2,9 @@ package com.orange.oss.cloudfoundry.dataflow;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+
 @ConfigurationProperties("cloudfoundry")
-public class MetadataConfig {
+public class FirehoseSourceProperties {
 
 	private String host;
 	private String user;

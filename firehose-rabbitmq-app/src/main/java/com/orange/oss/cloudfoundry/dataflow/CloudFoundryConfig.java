@@ -7,14 +7,18 @@ import org.cloudfoundry.reactor.client.ReactorCloudFoundryClient;
 import org.cloudfoundry.reactor.doppler.ReactorDopplerClient;
 import org.cloudfoundry.reactor.tokenprovider.PasswordGrantTokenProvider;
 import org.cloudfoundry.reactor.uaa.ReactorUaaClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CloudFoundryConfig {
 
+	@Autowired
+	FirehoseSourceProperties options;
+	
 	@Bean
-	DefaultConnectionContext connectionContext(MetadataConfig options) {
+	DefaultConnectionContext connectionContext() {
 		
 	    String apiHost=options.getHost();
 		return DefaultConnectionContext.builder()
@@ -24,7 +28,7 @@ public class CloudFoundryConfig {
 	}
 
 	@Bean
-	PasswordGrantTokenProvider tokenProvider(MetadataConfig options) {
+	PasswordGrantTokenProvider tokenProvider(FirehoseSourceProperties options) {
 	    return PasswordGrantTokenProvider.builder()
 	        .password(options.getPassword())
 	        .username(options.getUser())

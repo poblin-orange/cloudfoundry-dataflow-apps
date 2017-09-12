@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
+
 import org.cloudfoundry.doppler.Envelope;
 import org.cloudfoundry.doppler.FirehoseRequest;
 import org.cloudfoundry.reactor.doppler.ReactorDopplerClient;
@@ -11,24 +13,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.integration.endpoint.MessageProducerSupport;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageChannel;
 
 import reactor.core.publisher.Flux;
 
 @EnableBinding(Source.class)
-public class FirehoseSource extends MessageProducerSupport {
+@EnableConfigurationProperties({FirehoseSourceProperties.class})
+public class FirehoseSourceConfiguration  {
 
-	private static Logger logger = LoggerFactory.getLogger(FirehoseSource.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(FirehoseSourceConfiguration.class.getName());
 	
 	
 	@Autowired
 	ReactorDopplerClient doppler;
+	
+	@Autowired
+	@Qualifier(Source.OUTPUT)
+	MessageChannel output;
 
-	protected FirehoseSource(@Qualifier("output") MessageChannel out) {
+	protected FirehoseSourceConfiguration(@Qualifier("output") MessageChannel out) {
 
 	}
 
@@ -49,9 +56,8 @@ public class FirehoseSource extends MessageProducerSupport {
 
 	}
 
-	// starting source
-	@Override
-	protected void doStart() {
+	@PostConstruct
+	public void doStart() {
 
 		String subscriptionId = UUID.randomUUID().toString();
 		FirehoseRequest request = FirehoseRequest.builder().subscriptionId(subscriptionId).build();
@@ -73,8 +79,7 @@ public class FirehoseSource extends MessageProducerSupport {
 		// applicationLog.getMessageType());
 		// headers.put(SOURCE_NAME.asHeader(), applicationLog.getSourceName());
 		// headers.put(TIMESTAMP.asHeader(), applicationLog.getTimestamp());
-
-		super.sendMessage(MessageBuilder.withPayload(applicationLog.getLogMessage()).copyHeaders(headers).build());
+		this.output.send(MessageBuilder.withPayload(applicationLog.getLogMessage()).copyHeaders(headers).build());
 	}
 
 }
