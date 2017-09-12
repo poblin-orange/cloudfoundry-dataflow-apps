@@ -94,7 +94,35 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+
+			<!--  added for stream -->
+			<plugin>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-app-starter-doc-maven-plugin</artifactId>
+			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.springframework.cloud.stream.app.plugin</groupId> -->
+<!-- 				<artifactId>spring-cloud-stream-app-maven-plugin</artifactId> -->
+<!-- 				<configuration> -->
+<!-- 					<generatedProjectHome>${session.executionRootDirectory}/apps</generatedProjectHome> -->
+<!-- 					<generatedProjectVersion>${project.version}</generatedProjectVersion> -->
+<!-- 					<bom> -->
+<!-- 						<name>scs-bom</name> -->
+<!-- 						<groupId>org.springframework.cloud.stream.app</groupId> -->
+<!-- 						<artifactId>loggregator-app-dependencies</artifactId> -->
+<!-- 						<version>${project.version}</version> -->
+<!-- 					</bom> -->
+<!-- 					<generatedApps> -->
+<!-- 						<loggregator-source> -->
+<!-- 							<extraTestConfigClass>org.springframework.cloud.stream.app.test.loggregator.LoggregatorSourceTestConfiguration.class</extraTestConfigClass> -->
+<!-- 						</loggregator-source> -->
+<!-- 					</generatedApps> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
 		</plugins>
+			
+
 	</build>
 
 
